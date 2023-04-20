@@ -4,5 +4,5 @@ tasks:
   - name: Get the code
     init: |
       git config --global color.ui false
-      repo init -u https://github.com/seL4/sel4-tutorials-manifest
+      repo init -u https://github.com/seL4/sel4-tutorials-manifest -m master.xml
       repo sync
