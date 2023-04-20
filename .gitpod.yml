@@ -1,4 +1,4 @@
-image: trustworthysystems/camkes:latest
+image: sel4/tutorials:latest
 
 tasks:
   - name: Get the code
