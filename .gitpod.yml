@@ -3,5 +3,6 @@ image: sel4/tutorials:latest
 tasks:
   - name: Get the code
     init: |
+      git config --global color.ui false
       repo init -u https://github.com/seL4/sel4-tutorials-manifest
       repo sync
