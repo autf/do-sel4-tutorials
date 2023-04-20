@@ -1,0 +1,7 @@
+image: trustworthysystems/camkes:latest
+
+tasks:
+  - name: Get the code
+    init: |
+      repo init -u https://github.com/seL4/sel4-tutorials-manifest
+      repo sync
