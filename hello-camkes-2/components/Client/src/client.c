@@ -25,9 +25,16 @@ int run(void) {
      * hint 4: then copy all the strings from "s_arr" to the dataport.
      * hint 5: look at https://github.com/seL4/camkes-tool/blob/master/docs/index.md#an-example-of-dataports
      */
-    *(int*)dB = NUM_STRINGS;
-    for (int i = 0; i < NUM_STRINGS; i++) strcpy((char*)dB, s_arr[i]);
-    // not sure if done right
+    int* pint = (int*)dB;
+    *pint = NUM_STRINGS;
+    char* cell = (char*)(pint+1);
+    for (int i = 0; i < NUM_STRINGS; i++) {
+        for (char* s = s_arr[i]; *s; s++, cell++) {
+            *cell = *s;
+        }
+        *cell = 0;
+        ++cell;
+    }
 
     /* TASK 10: emit event to signal that the data is available */
     /* hint 1: use the function <interface_name>_emit
@@ -51,6 +58,7 @@ int run(void) {
      * hint 6: look at https://github.com/seL4/camkes-tool/blob/master/docs/index.md#an-example-of-dataports
      */
     for (int i = 0; i < dstr->n; i++) printf("%s.", dstr->str[i]);
+    puts("");
 
     /* TASK 13: send the data over again, this time using two dataports, one
      * untyped dataport containing the data, and one typed dataport containing
