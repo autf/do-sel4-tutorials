@@ -74,15 +74,26 @@ int run(void) {
      * hint 8: the dataport pointers should point into the untyped dataport
      * hint 9: for more information about dataport pointers see: https://github.com/seL4/camkes-tool/blob/master/docs/index.md
      */
-    // later
+    dptr->n = NUM_STRINGS;
+    cell = (char*)dB;
+    for (int i = 0; i < NUM_STRINGS; i++) {
+        dptr->ptr[i] = dataport_wrap_ptr((void*)cell); // don't use `&cell`; or that can also be done right?
+        // dataport_ptr_t addr = dataport_wrap_ptr((void*)cell);
+        // printf("(@client) cell = %p\n", cell);
+        // printf("(@client) addr = %p\n", dataport_unwrap_ptr(addr));
+        // dptr->ptr[i] = addr;
+        for (char* s = s_arr[i]; *s; ++s, ++cell) *cell = *s;
+        *cell = 0;
+        ++cell;
+    }
 
     /* TASK 14: emit event to signal that the data is available */
     /* hint 1: we've already done this before */
-    // em_emit();
+    em_emit();
 
     /* TASK 15: wait to get an event back signalling that data has been read */
     /* hint 1: we've already done this before */
-    // sink_wait();
+    sink_wait();
 
     printf("%s: the next instruction will cause a vm fault due to permissions\n", get_instance_name());
 

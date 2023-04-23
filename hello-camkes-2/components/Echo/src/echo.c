@@ -109,7 +109,13 @@ void callback_handler_2(void *a) {
      * hint 7: for more information about dataport pointers see: https://github.com/seL4/camkes-tool/blob/master/docs/index.md
      * hint 8: print out the string pointed to by each dataport pointer
      */
-
+    // puts("debug@cb2");
+    // printf("&dB = %p\n", &dB);
+    // printf("&dptr->ptr[0] = %p\n", dataport_unwrap_ptr(dptr->ptr[0])); // got 0
+    int n = dptr->n;
+    for (int i = 0; i < n; i++) {
+        printf("%s\n", (char*)dataport_unwrap_ptr(dptr->ptr[i]));
+    }
 
     /* TASK 24: register the original callback handler for this event */
     /* hint 1: use the function <interface name>_reg_callback()
@@ -117,13 +123,13 @@ void callback_handler_2(void *a) {
      * hint 3: pass NULL as the extra argument to the callback
      * hint 4: look at https://github.com/seL4/camkes-tool/blob/master/docs/index.md#an-example-of-events
      */
-
+    sink_reg_callback(&callback_handler_1, NULL);
 
     /* TASK 25: notify the client that we are done reading the data */
     /* hint 1: use the function <interface_name>_emit
      * hint 2: look at https://github.com/seL4/camkes-tool/blob/master/docs/index.md#an-example-of-events
      */
-
+    em_emit();
 }
 
 /* this function is invoked to initialise the echo event interface before it
