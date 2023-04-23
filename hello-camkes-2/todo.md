@@ -1,0 +1,26 @@
+# tasks:
+- [x] /* TASK 1:  components/Client/Client.camkes:8:     the event interfaces */
+- [x] /* TASK 2:  components/Client/Client.camkes:16:     the dataport interfaces */
+- [x] /* TASK 3:  components/Echo/Echo.camkes:5:     the event interfaces */
+- [x] /* TASK 4:  components/Echo/Echo.camkes:13:     the dataport interfaces */
+- [x] /* TASK 5:  hello-2.camkes:17:         Event connections */
+- [x] /* TASK 6:  hello-2.camkes:25:         Dataport connections */
+- [x] /* TASK 7:  hello-2.camkes:36:         set component priorities */
+- [x] /* TASK 8:  hello-2.camkes:43:         restrict access to dataports */
+- [x] /* TASK 9:  components/Client/src/client.c:20:     copy strings to an untyped dataport */
+- [x] /* TASK 10: components/Client/src/client.c:30:     emit event to signal that the data is available */
+- [x] /* TASK 11: components/Client/src/client.c:36:     wait to get an event back signalling that the reply data is avaialble */
+- [x] /* TASK 12: components/Client/src/client.c:42:     read the reply data from a typed dataport */
+- [ ] /* TASK 13: components/Client/src/client.c:53:     send the data over again, this time using two dataports, one
+- [ ] /* TASK 14: components/Client/src/client.c:69:     emit event to signal that the data is available */
+- [ ] /* TASK 15: components/Client/src/client.c:73:     wait to get an event back signalling that data has been read */
+- [ ] /* TASK 16: components/Client/src/client.c:79:     test the read and write permissions on the dataport.
+- [ ] /* TASK 17: components/Echo/src/echo.c:114: replace "echo" with the actual name of the "consumes" event interface */
+- [ ] /* TASK 18: components/Echo/src/echo.c:119:     register the first callback handler for this interface */
+- [ ] /* TASK 19: components/Echo/src/echo.c:34:     read some data from the untyped dataport */
+- [ ] /* TASK 20: components/Echo/src/echo.c:44:     put a modified copy of the data from the untyped dataport into the typed dataport */
+- [ ] /* TASK 21: components/Echo/src/echo.c:58:     register the second callback for this event. */
+- [ ] /* TASK 22: components/Echo/src/echo.c:66:     notify the client that there is new data available for it */
+- [ ] /* TASK 23: components/Echo/src/echo.c:82:     read some data from the dataports. specifically:
+- [ ] /* TASK 24: components/Echo/src/echo.c:97:     register the original callback handler for this event */
+- [ ] /* TASK 25: components/Echo/src/echo.c:105:     notify the client that we are done reading the data */

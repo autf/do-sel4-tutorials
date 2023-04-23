@@ -1,2 +1,1 @@
-# do-sel4-tutorials
-on gitpod.io
+projects/sel4-tutorials/README.md
