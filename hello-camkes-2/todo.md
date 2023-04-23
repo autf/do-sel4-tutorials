@@ -14,7 +14,7 @@
 - [x] /* TASK 13: components/Client/src/client.c:53:     send the data over again, this time using two dataports, one
 - [x] /* TASK 14: components/Client/src/client.c:69:     emit event to signal that the data is available */
 - [x] /* TASK 15: components/Client/src/client.c:73:     wait to get an event back signalling that data has been read */
-- [ ] /* TASK 16: components/Client/src/client.c:79:     test the read and write permissions on the dataport.
+- [x] /* TASK 16: components/Client/src/client.c:79:     test the read and write permissions on the dataport.
 - [x] /* TASK 17: components/Echo/src/echo.c:114: replace "echo" with the actual name of the "consumes" event interface */
 - [x] /* TASK 18: components/Echo/src/echo.c:119:     register the first callback handler for this interface */
 - [x] /* TASK 19: components/Echo/src/echo.c:34:     read some data from the untyped dataport */

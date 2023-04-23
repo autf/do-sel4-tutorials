@@ -101,7 +101,8 @@ int run(void) {
      * When we try to write to a read-only dataport, we will get a VM fault.
      */
     /* hint 1: try to assign a value to a field of the "str_buf_t" dataport */
-
+    dstr->n = 41;
+    dstr->str[0][0] = '!';
 
     return 0;
 }

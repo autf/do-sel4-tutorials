@@ -28,7 +28,8 @@ assembly {
          * hint 3: look at https://github.com/seL4/camkes-tool/blob/master/docs/index.md#an-example-of-dataports
          */
         connection seL4SharedData chanB(from client.dB, to echo.dB);
-        connection seL4SharedData chan_str(from client.dstr, to echo.dstr);
+        //connection seL4SharedData chan_str(from client.dstr, to echo.dstr);
+        connection seL4SharedData chan_str(from echo.dstr, to client.dstr); // from which to which not matter?
         connection seL4SharedData chan_ptr(from client.dptr, to echo.dptr);
 
     }
@@ -37,8 +38,8 @@ assembly {
         /* hint 1: component priority is specified as an attribute with the name <component name>.priority
          * hint 2: the highest priority is represented by 255, the lowest by 0
          */
-        Client.priority = 10;
-        Echo.priority = 11;
+        client.priority = 10;
+        echo.priority = 11;
 
         /* TASK 8: restrict access to dataports */
         /* hint 1: use attribute <component>.<interface_name>_access for each component and interface
@@ -46,7 +47,8 @@ assembly {
          * hint 4: make the "Buf" dataport read only for the Echo component
          * hint 3: make the "str_buf_t" dataport read only for the Client component
          */
-        Echo.dB_access = "R";
-        Client.dstr_access = "R";
+        echo.dB_access = "R";
+        client.dstr_access = "R";
+        // ref: https://github.com/seL4/camkes-tool/blob/master/docs/index.md#port-privileges
     }
 }
