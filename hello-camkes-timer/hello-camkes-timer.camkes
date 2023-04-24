@@ -27,6 +27,8 @@ assembly {
          * hint 2: look at
          * https://github.com/seL4/camkes-tool/blob/master/docs/index.md#creating-an-application
          */
+        component Timerbase timer_hw;
+        component Timer timer;
 
         /* Part 2, TASK 1: component instances */
         /* hint 1: a single TimerDTB component
@@ -39,7 +41,7 @@ assembly {
         /* this is the component interface. This starts commented out as there it must have
          * its 'hello' interface connected, which initially we cannot do. Uncomment this once
          * you can uncomment the 'timer interface connection' below */
-//        component Client client;
+        component Client client;
 
 
         /* Part 1, TASK 2: connections */
@@ -48,6 +50,8 @@ assembly {
          * hint 3: look at
          * https://github.com/seL4/camkes-tool/blob/master/docs/index.md#creating-an-application
          */
+        connection seL4HardwareMMIO hw_mem(from timer.reg, to timer_hw.reg); // order matters
+        connection seL4HardwareInterrupt hw_ir(from timer_hw.irq, to timer.irq);
 
         /* Part 2, TASK 2: connections */
         /* hint 1: connect the dummy_source and timer interfaces
@@ -63,7 +67,7 @@ assembly {
          * note that you may need to rename timer in 'to timer.hello' to match the name of the timer
          * component above
          */
-//        connection seL4RPCCall hello_timer(from client.hello, to timer.hello);
+        connection seL4RPCCall hello_timer(from client.hello, to timer.hello);
 
     }
     configuration {
@@ -73,6 +77,13 @@ assembly {
          * hint 2: look at
          * https://github.com/seL4/camkes-tool/blob/master/docs/index.md#hardware-components
          */
+        //timer_hw.mem_paddr = 0x40005000;
+        //timer_hw.irq_irq_number = 122;
+        //// from google bard -- wrong answer
+        timer_hw.reg_paddr = 0xF8001000;   // paddr of mmio registers
+        timer_hw.reg_size = 0x1000;        // size of mmio registers
+        timer_hw.irq_irq_number = 42;      // timer irq number
+        // from solution
 
         /* Part 2, TASK 3: hardware resources */
         /* TimerDTB:
@@ -82,7 +93,7 @@ assembly {
 
         /* assign an initial value to semaphore */
 
-//        timer.sem_value = 0;
+        timer.sem_value = 0;
 
     }
 }
