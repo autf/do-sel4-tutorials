@@ -1,0 +1,88 @@
+/*
+ * CAmkES device driver tutorial.
+ */
+
+import <std_connector.camkes>;
+
+/* import the component definitions */
+import "components/Client/Client.camkes";
+import "components/Timer/Timer.camkes";
+
+
+/* A valid CAmkES assembly must have at least one component. As the starting point for
+ * this tutorial does not have any valid components we declare an empty one that does nothing
+ * just to construct a valid spec. Once you have added some components to the composition
+ * you can remove this if you want, although it will cause no harm being left in */
+component EmptyComponent {
+}
+
+
+assembly {
+    composition {
+
+        component EmptyComponent empty;
+
+        /* Part 1, TASK 1: component instances */
+        /* hint 1: one hardware component and one driver component
+         * hint 2: look at
+         * https://github.com/seL4/camkes-tool/blob/master/docs/index.md#creating-an-application
+         */
+
+        /* Part 2, TASK 1: component instances */
+        /* hint 1: a single TimerDTB component
+         * hint 2: look at
+         * https://github.com/seL4/camkes-tool/blob/master/docs/index.md#creating-an-application
+         */
+
+
+
+        /* this is the component interface. This starts commented out as there it must have
+         * its 'hello' interface connected, which initially we cannot do. Uncomment this once
+         * you can uncomment the 'timer interface connection' below */
+//        component Client client;
+
+
+        /* Part 1, TASK 2: connections */
+        /* hint 1: use seL4HardwareMMIO to connect device memory
+         * hint 2: use seL4HardwareInterrupt to connect interrupt
+         * hint 3: look at
+         * https://github.com/seL4/camkes-tool/blob/master/docs/index.md#creating-an-application
+         */
+
+        /* Part 2, TASK 2: connections */
+        /* hint 1: connect the dummy_source and timer interfaces
+         * hint 2: the dummy_source should be the 'from' end
+         * hint 3: look at
+         * https://github.com/seL4/camkes-tool/blob/master/docs/index.md#creating-an-application
+         */
+
+
+        /* timer interface connection */
+
+        /* uncomment this (and the insantiation of 'client' above) once there is a timer component,
+         * note that you may need to rename timer in 'to timer.hello' to match the name of the timer
+         * component above
+         */
+//        connection seL4RPCCall hello_timer(from client.hello, to timer.hello);
+
+    }
+    configuration {
+        /* Part 1, TASK 3: hardware resources */
+        /* Timer and Timerbase:
+         * hint 1: find out the device memory address and IRQ number from the hardware data sheet
+         * hint 2: look at
+         * https://github.com/seL4/camkes-tool/blob/master/docs/index.md#hardware-components
+         */
+
+        /* Part 2, TASK 3: hardware resources */
+        /* TimerDTB:
+         * check components/Timer/Timer.camkes
+         */
+
+
+        /* assign an initial value to semaphore */
+
+//        timer.sem_value = 0;
+
+    }
+}

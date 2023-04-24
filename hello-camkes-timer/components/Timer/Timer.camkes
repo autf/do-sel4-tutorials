@@ -1,0 +1,42 @@
+/*
+ * Advanced CAmkES tutorial: device driver.
+ */
+import "../../interfaces/timer.camkes";
+
+component Timerbase{
+    hardware;
+    dataport Buf reg;
+    emits DataAvailable irq;
+}
+
+component Timer {
+    dataport Buf         reg;
+    consumes DataAvailable  irq;
+
+    provides timer_inf     hello;
+    has semaphore           sem;
+}
+
+component TimerDTB {
+    emits Dummy dummy_source;
+    consumes Dummy tmr;
+
+    provides timer_inf hello;
+    has semaphore sem;
+
+/* This is intentionally empty. Setting configurations inside a component requires a composition
+ * block, just limitations of CAmkES. */
+    composition {
+    }
+
+    configuration {
+    /* Part 2, TASK 3: hardware resources */
+    /* TimerDTB:
+     * hint 1: look in the DTB/DTS for the path of a timer
+     * hint 2: set the 'dtb' setting for the tmr interface in the TimerDTB component,
+     *         e.g. foo.dtb = dtb({"path" : "/bar"});
+     * hint 3: set the 'generate_interrupts' setting to 1
+     */
+
+    }
+}

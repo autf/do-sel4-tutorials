@@ -1,0 +1,10 @@
+/*
+ * CAmkES tutorial part 1: components with RPC. Client part.
+ */
+
+import "../../interfaces/timer.camkes";
+
+component Client {
+    control;
+    uses timer_inf hello;
+}
