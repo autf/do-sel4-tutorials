@@ -10,4 +10,3 @@ tools/
 !*.c
 !*.camkes
 !*.idl4
-!*.md
