@@ -20,11 +20,15 @@ int main(int argc, char *argv[]) {
 
     /* map a PDPT at TEST_VADDR */
     error = seL4_X86_PDPT_Map(pdpt, seL4_CapInitThreadVSpace, TEST_VADDR, seL4_X86_Default_VMAttributes);
+    ZF_LOGF_IF(error, "pdpt failed");
 
-    // TODO map a page directory object
+    // (done) map a page directory object
+    error = seL4_X86_PageDirectory_Map(pd, seL4_CapInitThreadVSpace, TEST_VADDR, seL4_X86_Default_VMAttributes);
+    ZF_LOGF_IF(error, "pd failed");
 
-    // TODO map a page table object
-
+    // (done) map a page table object
+    error = seL4_X86_PageTable_Map(pt, seL4_CapInitThreadVSpace, TEST_VADDR, seL4_X86_Default_VMAttributes);
+    ZF_LOGF_IF(error, "pt failed");
 
     /* map a read-only page at TEST_VADDR */
     error = seL4_X86_Page_Map(frame, seL4_CapInitThreadVSpace, TEST_VADDR, seL4_CanRead, seL4_X86_Default_VMAttributes);
@@ -37,13 +41,17 @@ int main(int argc, char *argv[]) {
     printf("Read x: %lu\n", *x);
 
 
-    // TODO remap the page
+    // (done) remap the page
+    error = seL4_X86_Page_Map(frame, seL4_CapInitThreadVSpace, TEST_VADDR, seL4_ReadWrite, seL4_X86_Default_VMAttributes);
+    ZF_LOGF_IF(error, "remap railed");
 
     /* write to the page we mapped */
     printf("Set x to 5\n");
     *x = 5;
 
     printf("Success!\n");
+
+    seL4_X86_Page_Unmap(frame); // no visible output
 
     return 0;
 }
