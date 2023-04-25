@@ -15,12 +15,12 @@ void tmr_irq_handle(ps_irq_t *irq) {
     /* Part 2, TASK 4: call into the supplied driver to handle the interrupt. */
     /* hint: timer_handle_irq
      */
-
+    timer_handle_irq(&timer_drv);
 
     /* Part 2, TASK 5: stop the timer. */
     /* hint: timer_stop
      */
-
+    timer_stop(&timer_drv);
 
     /* signal the rpc interface. */
     error = sem_post();
@@ -30,7 +30,7 @@ void tmr_irq_handle(ps_irq_t *irq) {
     /* hint 1: use the function <to_interface_name>_irq_acknowledge()
      * hint 2: pass in the 'irq' variable to the function
      */
-
+    tmr_irq_acknowledge(irq);
 }
 
 void hello__init() {
@@ -43,12 +43,12 @@ void hello__init() {
      * and "register number" is the index of the register block in the device
      * node in the devicetree blob
      */
-
+    timer_init(&timer_drv, DEFAULT_TIMER_ID, tmr_0);
 
     /* Part 2, TASK 8: start the timer
      * hint: timer_start
      */
-
+    timer_start(&timer_drv);
 }
 
 /* Part 2, TASK 9: implement the rpc function. */
@@ -68,7 +68,7 @@ void hello_sleep(int sec) {
     /* hint1: timer_set_timeout
      * hint2: periodic should be set to false
      */
-
+    timer_set_timeout(&timer_drv, 2 * NS_IN_SECOND, false);
 
     error = sem_wait();
     ZF_LOGF_IF(error != 0, "failed to wait on semaphore");

@@ -37,6 +37,7 @@ component TimerDTB {
      *         e.g. foo.dtb = dtb({"path" : "/bar"});
      * hint 3: set the 'generate_interrupts' setting to 1
      */
-
+        tmr.dtb = dtb({"path": "/amba/timer@f8001000"});
+        tmr.generate_interrupts = 1;
     }
 }
