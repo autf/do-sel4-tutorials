@@ -18,6 +18,9 @@ int main(int c, char *argv[]) {
     seL4_MessageInfo_t info = seL4_Recv(endpoint, &sender);
     while (1) {
 	    seL4_Error error;
+	    // seL4_Error error = seL4_CNode_Move(cnode, free_slot, seL4_WordBits, cnode, free_slot, seL4_WordBits);
+        // int is_empty = error == seL4_FailedLookup;
+        // if (sender == 0 || is_empty) {
         if (sender == 0) {
 
              /* No badge! give this sender a badged copy of the endpoint */
@@ -27,7 +30,9 @@ int main(int c, char *argv[]) {
                                                 seL4_AllRights, badge);
              printf("Badged %lu\n", badge);
 
-             // TODO use cap transfer to send the badged cap in the reply
+             // (done) use cap transfer to send the badged cap in the reply
+             info = seL4_MessageInfo_new(0, 0, 1, 0); // where is this fn defined?
+             seL4_SetCap(0, free_slot);
 
              /* reply to the sender and wait for the next message */
              seL4_Reply(info);
@@ -36,15 +41,24 @@ int main(int c, char *argv[]) {
              error = seL4_CNode_Delete(cnode, free_slot, seL4_WordBits);
              assert(error == seL4_NoError);
 
+             seL4_CNode_SaveCaller(cnode, free_slot, seL4_WordBits);
+
              /* wait for the next message */
              info = seL4_Recv(endpoint, &sender);
         } else {
 
-             // TODO use printf to print out the message sent by the client
+             // (done) use printf to print out the message sent by the client
              // followed by a new line
+             int n = seL4_MessageInfo_get_length(info);
+             for (int i = 0; i < n; i++) putchar(seL4_GetMR(i));
+             putchar('\n');
 
 
-             // TODO reply to the client and wait for the next message
+             // (done) reply to the client and wait for the next message
+            //  info = seL4_MessageInfo_new(0, 0, 0, 0); // optional
+             seL4_Reply(info);
+             info = seL4_Recv(endpoint, &sender);
+            //  info = seL4_Recv(free_slot, &sender);
         }
     }
 
