@@ -43,12 +43,21 @@ int main(void)
 
     /* Mint the fault ep with a badge */
 
+    puts("debug: src changed #7");
+    printf("%p\n%p\n",
+        foreign_badged_faulter_empty_slot_cap,
+        faulter_fault_ep_cap);
+    ZF_LOGF_IF(foreign_badged_faulter_empty_slot_cap != faulter_fault_ep_cap, "then why any one is ok?");
+
     error = seL4_CNode_Mint(
         handler_cspace_root,
         badged_faulter_fault_ep_cap,
         seL4_WordBits,
         handler_cspace_root,
-        /* EXERCISE: Which capability should be the source argument here? */-1,
+        // /* EXERCISE: Which capability should be the source argument here? */-1,
+        // foreign_badged_faulter_empty_slot_cap, // ok, why? :: looks like they are alias
+        faulter_fault_ep_cap,
+        // foreign_faulter_capfault_cap, //-> fail to mint
         seL4_WordBits,
         seL4_AllRights, FAULTER_BADGE_VALUE);
 
@@ -63,7 +72,8 @@ int main(void)
 
     error = seL4_CNode_Copy(
         faulter_cspace_root,
-        /* EXERCISE: What should the destination be for this cap copy? */-1,
+        // /* EXERCISE: What should the destination be for this cap copy? */-1,
+        foreign_badged_faulter_empty_slot_cap,
         seL4_WordBits,
         handler_cspace_root,
         badged_faulter_fault_ep_cap,
@@ -75,22 +85,38 @@ int main(void)
            "faulter's cspace.\n"
            PROGNAME "(Only necessary on Master kernel.)\n");
 
+    ZF_LOGF_IF(
+        seL4_TCB_SetSpace(
+            faulter_tcb_cap,
+            foreign_badged_faulter_empty_slot_cap,
+            faulter_cspace_root,
+            0,
+            faulter_vspace_root,
+            0),
+        PROGNAME "Failed SetSpace"
+    );
 
+    seL4_Reply(seL4_MessageInfo_new(0, 0, 0, 0));
 
+    seL4_Recv(faulter_fault_ep_cap, &tmp_badge);
+    ZF_LOGF_IF(tmp_badge != FAULTER_BADGE_VALUE, PROGNAME "Expect called via FAULTER_BADGE");
+    foreign_faulter_capfault_cap = seL4_GetMR(seL4_CapFault_Addr);
 
+    ZF_LOGF_IF(
+        seL4_CNode_Copy(
+            faulter_cspace_root,
+            foreign_faulter_capfault_cap,
+            seL4_WordBits,
+            handler_cspace_root,
+            sequencing_ep_cap,
+            seL4_WordBits,
+            seL4_AllRights),
+        PROGNAME "Failed handling fault"
+    );
 
+    seL4_Reply(seL4_MessageInfo_new(0, 0, 0, 0));
 
-
-
-
-
-
-
-
-
-
-
-
-
-    return 0;
+    puts(PROGNAME "(DONE)");
+    while(1);
+    // return 0;
 }
