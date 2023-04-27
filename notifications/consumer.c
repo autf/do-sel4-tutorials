@@ -32,25 +32,31 @@ int main(int c, char *argv[]) {
     seL4_Error error = seL4_NoError;
     seL4_Word badge;
 
-    
+
     /* set up shared memory for consumer 1 */
     /* first duplicate the cap */
-    error = seL4_CNode_Copy(cnode, mapping_1, seL4_WordBits, 
+    error = seL4_CNode_Copy(cnode, mapping_1, seL4_WordBits,
                           cnode, buf1_frame_cap, seL4_WordBits, seL4_AllRights);
     ZF_LOGF_IFERR(error, "Failed to copy cap");
     /* now do the mapping */
-    error = seL4_ARCH_Page_Map(mapping_1, producer_1_vspace, BUF_VADDR, 
+    error = seL4_ARCH_Page_Map(mapping_1, producer_1_vspace, BUF_VADDR,
                                seL4_AllRights, seL4_ARCH_Default_VMAttributes);
     ZF_LOGF_IFERR(error, "Failed to map frame");
-    
-    // TODO share buf2_frame_cap with producer_2
+
+    // (done) share buf2_frame_cap with producer_2
+    error = seL4_CNode_Copy(cnode, mapping_2, seL4_WordBits,
+                            cnode, buf2_frame_cap, seL4_WordBits, seL4_AllRights);
+    ZF_LOGF_IFERR(error, "Failed to copy cap 2");
+    error = seL4_ARCH_Page_Map(mapping_2, producer_2_vspace, BUF_VADDR,
+                               seL4_AllRights, seL4_ARCH_Default_VMAttributes);
+    ZF_LOGF_IFERR(error, "Failed to map frame 2");
 
     /* send IPCs with the buffer address to both producers */
     seL4_SetMR(0, BUF_VADDR);
     seL4_Send(endpoint, seL4_MessageInfo_new(0, 0, 0, 1));
     seL4_SetMR(0, BUF_VADDR);
     seL4_Send(endpoint, seL4_MessageInfo_new(0, 0, 0, 1));
-    
+
     /* start single buffer producer consumer */
     volatile long *buf1 = (long *) buf1_frame;
     volatile long *buf2 = (long *) buf2_frame;
@@ -58,17 +64,29 @@ int main(int c, char *argv[]) {
     *buf1 = 0;
     *buf2 = 0;
 
-    
-    // TODO signal both producers
-    printf("Waiting for producer\n");
+
+    // (done) signal both producers
+    seL4_Signal(buf1_empty);
+    seL4_Signal(buf2_empty);
+
+    printf("\tWaiting for producer\n");
     for (int i = 0; i < 10; i++) {
         seL4_Wait(full, &badge);
-        printf("Got badge: %lx\n", badge);
-        
-    // TODO, use the badge to check which producer has signalled you, and signal it back. Note that you 
+        printf("\tGot badge: %lx\n", badge);
+
+    // (done), use the badge to check which producer has signalled you, and signal it back. Note that you
     // may recieve more than 1 signal at a time.
+        if (badge & 1) {
+            printf("\tbuf1 -> %ld\n", *buf1);
+            seL4_Signal(buf1_empty);
+        }
+        if (badge & 2) {
+            printf("\tbuf2 -> %ld\n", *buf2);
+            seL4_Signal(buf2_empty);
+        }
    }
 
-    printf("Success!\n");
-    return 0;
+    printf("\tSuccess!\n");
+    while(1);
+    // return 0;
 }
